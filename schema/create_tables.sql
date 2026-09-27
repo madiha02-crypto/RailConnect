@@ -186,5 +186,80 @@ CREATE TABLE seats (
     CONSTRAINT chk_seats_seat_no
         CHECK (seat_no > 0)
 ) ENGINE = InnoDB;
+-- ============================================================
+-- 7. PASSENGERS
+-- passengers(passenger_id, name, age, gender, phone)
+-- PK: passenger_id
+-- ============================================================
 
+CREATE TABLE passengers (
+    passenger_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    age INT NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    phone VARCHAR(15) NOT NULL,
+
+    PRIMARY KEY (passenger_id),
+
+    CONSTRAINT chk_passengers_age
+        CHECK (age BETWEEN 1 AND 120),
+
+    CONSTRAINT chk_passengers_gender
+        CHECK (
+            gender IN (
+                'Male',
+                'Female',
+                'Other'
+            )
+        )
+) ENGINE = InnoDB;
+
+
+-- ============================================================
+-- 8. BOOKINGS
+-- bookings(
+--     booking_id,
+--     train_id,
+--     from_station_id,
+--     to_station_id,
+--     journey_date,
+--     status
+-- )
+-- PK: booking_id
+-- ============================================================
+
+CREATE TABLE bookings (
+    booking_id INT NOT NULL AUTO_INCREMENT,
+    train_id INT NOT NULL,
+    from_station_id INT NOT NULL,
+    to_station_id INT NOT NULL,
+    journey_date DATE NOT NULL,
+    status VARCHAR(30) NOT NULL,
+
+    PRIMARY KEY (booking_id),
+
+    CONSTRAINT fk_bookings_train
+        FOREIGN KEY (train_id)
+        REFERENCES trains(train_id),
+
+    CONSTRAINT fk_bookings_from_station
+        FOREIGN KEY (from_station_id)
+        REFERENCES stations(station_id),
+
+    CONSTRAINT fk_bookings_to_station
+        FOREIGN KEY (to_station_id)
+        REFERENCES stations(station_id),
+
+    CONSTRAINT chk_bookings_different_stations
+        CHECK (from_station_id <> to_station_id),
+
+    CONSTRAINT chk_bookings_status
+        CHECK (
+            status IN (
+                'Confirmed',
+                'Partially Cancelled',
+                'Cancelled'
+            )
+        )
+) ENGINE = InnoDB;
 
