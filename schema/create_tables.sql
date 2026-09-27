@@ -262,4 +262,86 @@ CREATE TABLE bookings (
             )
         )
 ) ENGINE = InnoDB;
+-- ============================================================
+-- 9. TICKETS
+-- tickets(
+--     ticket_id,
+--     booking_id,
+--     passenger_id,
+--     seat_id,
+--     journey_date,
+--     fare
+-- )
+--
+-- PK: ticket_id
+-- CK: (seat_id, journey_date)
+-- ============================================================
+
+CREATE TABLE tickets (
+    ticket_id INT NOT NULL AUTO_INCREMENT,
+    booking_id INT NOT NULL,
+    passenger_id INT NOT NULL,
+    seat_id INT NOT NULL,
+    journey_date DATE NOT NULL,
+    fare DECIMAL(10,2) NOT NULL,
+
+    PRIMARY KEY (ticket_id),
+
+    CONSTRAINT uq_tickets_seat_journey
+        UNIQUE (seat_id, journey_date),
+
+    CONSTRAINT fk_tickets_booking
+        FOREIGN KEY (booking_id)
+        REFERENCES bookings(booking_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_tickets_passenger
+        FOREIGN KEY (passenger_id)
+        REFERENCES passengers(passenger_id),
+
+    CONSTRAINT fk_tickets_seat
+        FOREIGN KEY (seat_id)
+        REFERENCES seats(seat_id),
+
+    CONSTRAINT chk_tickets_fare
+        CHECK (fare >= 0.00)
+) ENGINE = InnoDB;
+
+
+-- ============================================================
+-- 10. PAYMENTS
+-- payments(payment_id, booking_id, amount, method, paid_on)
+-- PK: payment_id
+-- FK: booking_id -> bookings(booking_id)
+-- ON DELETE RESTRICT
+-- ============================================================
+
+CREATE TABLE payments (
+    payment_id INT NOT NULL AUTO_INCREMENT,
+    booking_id INT NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    method VARCHAR(20) NOT NULL,
+    paid_on DATETIME NOT NULL,
+
+    PRIMARY KEY (payment_id),
+
+    CONSTRAINT fk_payments_booking
+        FOREIGN KEY (booking_id)
+        REFERENCES bookings(booking_id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT chk_payments_amount
+        CHECK (amount > 0.00),
+
+    CONSTRAINT chk_payments_method
+        CHECK (
+            method IN (
+                'UPI',
+                'Credit Card',
+                'Debit Card',
+                'Net Banking'
+            )
+        )
+) ENGINE = InnoDB;
+
 
