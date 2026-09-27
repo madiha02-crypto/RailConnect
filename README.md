@@ -12,3 +12,9 @@ RailConnect is a relational database designed to manage stations, train schedule
 |    5   | Mohammed Shafi  | AU25UG-036 |Sample Data + SQL Queries                     |
 |    6   | Naman Choudhary | AU25UG-040 |Documentation + Validation + Business Analysis|
 
+## Repository Structure
+* `schema/`: DDL statements to create the database, tables, and constraints.
+* `data/`: DML statements to insert the sample data.
+* `queries/`: SQL queries for the business questions.
+* `diagrams/`: ER diagram and relational schema diagram.
+* `docs/`: Project report and detailed documentation.
