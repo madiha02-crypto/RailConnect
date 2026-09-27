@@ -1,3 +1,4 @@
+
 # stations
 
 * Schema: `stations(station_id, code, name, city)`
@@ -16,14 +17,14 @@
 * Candidate Key (CK): `train_no`
 * Integrity Constraints: `train_type` IN `('Superfast', 'Express', 'Passenger', 'Mail', 'Vande Bharat')`
 
-# train_station
+# train_stations
 
-* Schema: `train_station(train_id, station_id, stop_no, arrival_time, departure_time)`
+* Schema: `train_stations(train_id, station_id, stop_no, arrival_time, departure_time)`
 * Primary Key (PK): `(train_id, station_id)`
 * Candidate Key (CK): `(train_id, stop_no)`
 * Foreign Keys (FK):
-  * `train_id` references `train(train_id)`
-  * `station_id` references `station(station_id)`
+  * `train_id` references `trains(train_id)`
+  * `station_id` references `stations(station_id)`
 * Integrity Constraints:
   * `stop_no` > 0
   * `departure_time` >= `arrival_time`
@@ -69,9 +70,8 @@
 
 # tickets
 
-* Schema: `tickets(ticket_id, booking_id, passenger_id, seat_id, journey_date, fare)`
+* Schema: `tickets(ticket_id, booking_id, passenger_id, seat_id, fare)`
 * Primary Key (PK): `ticket_id`
-* Candidate Key (CK): `(seat_id, journey_date)` UNIQUE
 * Foreign Keys (FK):
   * `booking_id` references `bookings(booking_id)` ON DELETE CASCADE
   * `passenger_id` references `passengers(passenger_id)`
