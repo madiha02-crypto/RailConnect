@@ -107,4 +107,84 @@ CREATE TABLE train_station (
     CONSTRAINT chk_train_station_times
         CHECK (departure_time >= arrival_time)
 ) ENGINE = InnoDB;
+-- ============================================================
+-- 5. COACHES
+-- coaches(coach_id, train_id, coach_no, class_type)
+-- PK: coach_id
+-- CK: (train_id, coach_no)
+-- FK: train_id -> trains(train_id)
+-- ON DELETE CASCADE
+-- ============================================================
+
+CREATE TABLE coaches (
+    coach_id INT NOT NULL AUTO_INCREMENT,
+    train_id INT NOT NULL,
+    coach_no VARCHAR(20) NOT NULL,
+    class_type VARCHAR(10) NOT NULL,
+
+    PRIMARY KEY (coach_id),
+
+    CONSTRAINT uq_coaches_train_coach
+        UNIQUE (train_id, coach_no),
+
+    CONSTRAINT fk_coaches_train
+        FOREIGN KEY (train_id)
+        REFERENCES trains(train_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_coaches_class_type
+        CHECK (
+            class_type IN (
+                '1A',
+                '2A',
+                '3A',
+                'SL',
+                'CC',
+                '2S'
+            )
+        )
+) ENGINE = InnoDB;
+
+
+-- ============================================================
+-- 6. SEATS
+-- seats(seat_id, coach_id, seat_no, berth_type)
+-- PK: seat_id
+-- CK: (coach_id, seat_no)
+-- FK: coach_id -> coaches(coach_id)
+-- ON DELETE CASCADE
+-- ============================================================
+
+CREATE TABLE seats (
+    seat_id INT NOT NULL AUTO_INCREMENT,
+    coach_id INT NOT NULL,
+    seat_no INT NOT NULL,
+    berth_type VARCHAR(20) NOT NULL,
+
+    PRIMARY KEY (seat_id),
+
+    CONSTRAINT uq_seats_coach_seat
+        UNIQUE (coach_id, seat_no),
+
+    CONSTRAINT fk_seats_coach
+        FOREIGN KEY (coach_id)
+        REFERENCES coaches(coach_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_seats_berth_type
+        CHECK (
+            berth_type IN (
+                'Lower',
+                'Middle',
+                'Upper',
+                'Side Lower',
+                'Side Upper',
+                'Window'
+            )
+        ),
+
+    CONSTRAINT chk_seats_seat_no
+        CHECK (seat_no > 0)
+) ENGINE = InnoDB;
+
 
