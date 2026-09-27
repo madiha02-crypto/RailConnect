@@ -377,4 +377,4 @@ CREATE TABLE cancellations (
         CHECK (refund_amount >= 0.00)
 ) ENGINE = InnoDB;
 
-
+SHOW TABLES;
