@@ -67,3 +67,44 @@ CREATE TABLE trains (
         )
 ) ENGINE = InnoDB;
 
+-- ============================================================
+-- 4. TRAIN_STATION
+-- train_station(
+--     train_id,
+--     station_id,
+--     stop_no,
+--     arrival_time,
+--     departure_time
+-- )
+--
+-- PK: (train_id, station_id)
+-- CK: (train_id, stop_no)
+-- ============================================================
+
+CREATE TABLE train_station (
+    train_id INT NOT NULL,
+    station_id INT NOT NULL,
+    stop_no INT NOT NULL,
+    arrival_time TIME NOT NULL,
+    departure_time TIME NOT NULL,
+
+    PRIMARY KEY (train_id, station_id),
+
+    CONSTRAINT uq_train_station_stop
+        UNIQUE (train_id, stop_no),
+
+    CONSTRAINT fk_train_station_train
+        FOREIGN KEY (train_id)
+        REFERENCES trains(train_id),
+
+    CONSTRAINT fk_train_station_station
+        FOREIGN KEY (station_id)
+        REFERENCES stations(station_id),
+
+    CONSTRAINT chk_train_station_stop_no
+        CHECK (stop_no > 0),
+
+    CONSTRAINT chk_train_station_times
+        CHECK (departure_time >= arrival_time)
+) ENGINE = InnoDB;
+
