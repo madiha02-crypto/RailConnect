@@ -343,5 +343,38 @@ CREATE TABLE payments (
             )
         )
 ) ENGINE = InnoDB;
+-- ============================================================
+-- 11. CANCELLATIONS
+-- cancellations(
+--     cancellation_id,
+--     ticket_id,
+--     cancelled_on,
+--     refund_amount
+-- )
+-- PK: cancellation_id
+-- CK: ticket_id UNIQUE
+-- FK: ticket_id -> tickets(ticket_id)
+-- ON DELETE RESTRICT
+-- ============================================================
+
+CREATE TABLE cancellations (
+    cancellation_id INT NOT NULL AUTO_INCREMENT,
+    ticket_id INT NOT NULL,
+    cancelled_on DATETIME NOT NULL,
+    refund_amount DECIMAL(10,2) NOT NULL,
+
+    PRIMARY KEY (cancellation_id),
+
+    CONSTRAINT uq_cancellations_ticket
+        UNIQUE (ticket_id),
+
+    CONSTRAINT fk_cancellations_ticket
+        FOREIGN KEY (ticket_id)
+        REFERENCES tickets(ticket_id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT chk_cancellations_refund
+        CHECK (refund_amount >= 0.00)
+) ENGINE = InnoDB;
 
 
