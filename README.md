@@ -18,3 +18,8 @@ RailConnect is a relational database designed to manage stations, train schedule
 * `queries/`: SQL queries for the business questions.
 * `diagrams/`: ER diagram and relational schema diagram.
 * `docs/`: Project report and detailed documentation.
+
+## Setup Instructions
+1. Execute `schema/create_tables.sql` to build the database.
+2. Execute `data/insert_data.sql` to populate sample data.
+3. Execute `queries/queries.sql` to run the analysis.
