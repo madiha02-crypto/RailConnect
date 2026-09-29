@@ -25,19 +25,14 @@ TICKET   (passenger + allotted seat + fare)
 PAYMENT  ──→  (optionally)  CANCELLATION + refund
 
 ## Team
-S.No	Name	        USN	        Role
-
-1	    Syed Kaifuddin	AU25UG-061	GitHub & Integration Lead
-
-2	    Yashwant Gowda	AU25UG-084	Requirements & ER Diagram
-
-3	    Lakshya R	    AU25UG-029	Relational Schema, Keys & Normalisation
-
-4	    Madiha Shaik S	AU25UG-078	SQL Implementation & Constraints
-
-5	    Mohammed Shafi	AU25UG-036	Sample Data & SQL Queries
-
-6	    Naman Choudhary	AU25UG-040	Documentation & Validation
+| S.No | Name | USN | Role |
+| :--- | :--- | :--- | :--- |
+| 1 | Syed Kaifuddin | AU25UG-061 | GitHub & Integration Lead |
+| 2 | Yashwant Gowda | AU25UG-084 | Requirements & ER Diagram |
+| 3 | Lakshya R | AU25UG-029 | Relational Schema, Keys & Normalisation |
+| 4 | Madiha Shaik S | AU25UG-078 | SQL Implementation & Constraints |
+| 5 | Mohammed Shafi | AU25UG-036 | Sample Data & SQL Queries |
+| 6 | Naman Choudhary | AU25UG-040 | Documentation & Validation |
 
 ✨ Key Features
 - 10 interlinked tables covering the complete reservation lifecycle
@@ -48,10 +43,12 @@ S.No	Name	        USN	        Role
 - Validated design — ER diagram, relational schema and SQL implementation cross-checked; constraints verified with negative test cases
 
 ## Tech Stack
-Database	MySQL 8.0
-Language	SQL (DDL + DML)
-Version     Control	Git & GitHub
-Diagrams	draw.io
+| Category | Tool / Technology |
+| :--- | :--- |
+| Database | MySQL 8.0 |
+| Language | SQL (DDL + DML) |
+| Version Control | Git & GitHub |
+| Diagrams | draw.io |
 
 ## Repository Structure
 * `schema/`: DDL statements to create the database, tables, and constraints.
@@ -62,17 +59,18 @@ Diagrams	draw.io
 
 
 ## Database Schema
-Table	        Purpose
-stations	    Railway stations
-trains	        Trains operated
-train_stations	Route: ordered stops of each train (M:N junction table)
-coaches	        Coaches attached to each train
-seats	        Seats within each coach
-passengers	    Travellers
-bookings	    Reservations for a journey date
-tickets	        Seat allotted to a passenger in a booking
-payments	    Payments made for bookings
-cancellations	Cancelled tickets and refunds
+| Table | Purpose |
+| :--- | :--- |
+| `stations` | Railway stations |
+| `trains` | Trains operated |
+| `train_stations` | Route: ordered stops of each train (M:N junction table) |
+| `coaches` | Coaches attached to each train |
+| `seats` | Seats within each coach |
+| `passengers` | Travellers |
+| `bookings` | Reservations for a journey date |
+| `tickets` | Seat allotted to a passenger in a booking |
+| `payments` | Payments made for bookings |
+| `cancellations` | Cancelled tickets and refunds |
 
 
 ## Setup Instructions
