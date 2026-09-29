@@ -113,3 +113,6 @@
 * **Functional Dependencies:**
   * FD₁: `cancellation_id` → `ticket_id`, `cancelled_on`, `refund_amount`
   * FD₂: `ticket_id` → `cancellation_id`, `cancelled_on`, `refund_amount`
+* **Verification:**
+  * Both determinants are superkeys; hence no non-prime attribute determines another non-prime attribute.
+* **Conclusion:** Satisfies 3NF.
