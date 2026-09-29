@@ -140,3 +140,104 @@ GROUP BY
     t.name
 ORDER BY
     total_revenue DESC;
+
+-- ============================================================
+-- Q5. What is the cancellation rate?
+--     Conditional aggregation using CASE
+-- ============================================================
+--
+-- Cancellation rate = cancelled bookings / total bookings.
+-- We treat 'Cancelled' and 'Partially Cancelled' separately.
+-- Using CASE inside SUM is the conditional aggregation the
+-- PRD specifically asks for.
+-- ============================================================
+ 
+SELECT
+    COUNT(booking_id)                                           AS total_bookings,
+ 
+    SUM(CASE WHEN status = 'Cancelled'           THEN 1 ELSE 0 END)
+                                                                AS fully_cancelled,
+ 
+    SUM(CASE WHEN status = 'Partially Cancelled' THEN 1 ELSE 0 END)
+                                                                AS partially_cancelled,
+ 
+    SUM(CASE WHEN status = 'Confirmed'           THEN 1 ELSE 0 END)
+                                                                AS confirmed,
+ 
+    ROUND(
+        SUM(CASE WHEN status = 'Cancelled' THEN 1 ELSE 0 END)
+        / COUNT(booking_id) * 100,
+        2
+    )                                                           AS full_cancellation_rate_pct,
+ 
+    ROUND(
+        SUM(CASE WHEN status IN ('Cancelled', 'Partially Cancelled') THEN 1 ELSE 0 END)
+        / COUNT(booking_id) * 100,
+        2
+    )                                                           AS any_cancellation_rate_pct
+ 
+FROM
+    bookings;
+ 
+ 
+-- ============================================================
+-- Q6. What is the average fare by route?
+--     AVG, GROUP BY route
+-- ============================================================
+--
+-- Route = (from_station, to_station) pair.
+-- Fare comes from tickets; we join up through bookings to get
+-- the route, then average the fare per route.
+-- ============================================================
+ 
+SELECT
+    s_from.name                         AS from_station,
+    s_from.city                         AS from_city,
+    s_to.name                           AS to_station,
+    s_to.city                           AS to_city,
+    COUNT(tk.ticket_id)                 AS tickets_sold,
+    ROUND(AVG(tk.fare), 2)              AS avg_fare
+FROM
+    tickets  tk
+    JOIN bookings b  ON tk.booking_id       = b.booking_id
+    JOIN stations s_from ON b.from_station_id = s_from.station_id
+    JOIN stations s_to   ON b.to_station_id   = s_to.station_id
+GROUP BY
+    b.from_station_id,
+    b.to_station_id,
+    s_from.name,
+    s_from.city,
+    s_to.name,
+    s_to.city
+ORDER BY
+    avg_fare DESC;
+ 
+ 
+-- ============================================================
+-- Q7. Which passengers have multiple bookings?
+--     GROUP BY, HAVING COUNT > 1
+-- ============================================================
+--
+-- We trace passengers → tickets → bookings to count how many
+-- distinct bookings each passenger appears in.
+-- HAVING filters to only those with more than one booking.
+-- ============================================================
+ 
+SELECT
+    p.passenger_id,
+    p.name                              AS passenger_name,
+    p.age,
+    p.gender,
+    COUNT(DISTINCT tk.booking_id)       AS total_bookings
+FROM
+    passengers p
+    JOIN tickets tk ON p.passenger_id = tk.passenger_id
+GROUP BY
+    p.passenger_id,
+    p.name,
+    p.age,
+    p.gender
+HAVING
+    COUNT(DISTINCT tk.booking_id) > 1
+ORDER BY
+    total_bookings DESC;
