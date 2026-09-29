@@ -67,3 +67,76 @@ ORDER BY
     total_bookings DESC;
 
 
+-- ============================================================
+-- Q3. What is the seat occupancy for each train?
+--     Ratio of booked seats to total seats
+-- ============================================================
+--
+-- "Total seats" = all seats across all coaches of a train.
+-- "Booked seats" = tickets with status Confirmed or
+--   Partially Cancelled (i.e., at least one ticket issued).
+--   We exclude fully Cancelled bookings (seat freed).
+--
+-- We use a subquery to count booked seats per train,
+-- then divide by total seats (coaches JOIN seats) to get
+-- the occupancy ratio.
+-- ============================================================
+ 
+SELECT
+    t.train_id,
+    t.train_no,
+    t.name                                          AS train_name,
+    COUNT(DISTINCT s.seat_id)                       AS total_seats,
+    COUNT(DISTINCT tk.ticket_id)                    AS booked_seats,
+    ROUND(
+        COUNT(DISTINCT tk.ticket_id)
+        / COUNT(DISTINCT s.seat_id) * 100,
+        2
+    )                                               AS occupancy_pct
+FROM
+    trains t
+    JOIN coaches c  ON t.train_id  = c.train_id
+    JOIN seats   s  ON c.coach_id  = s.coach_id
+    LEFT JOIN tickets tk
+        ON  s.seat_id = tk.seat_id
+        -- Only count tickets from non-cancelled bookings
+        AND tk.booking_id IN (
+            SELECT booking_id
+            FROM   bookings
+            WHERE  status <> 'Cancelled'
+        )
+GROUP BY
+    t.train_id,
+    t.train_no,
+    t.name
+ORDER BY
+    occupancy_pct DESC;
+ 
+ 
+-- ============================================================
+-- Q4. What is the revenue by train?
+--     SUM over payments, GROUP BY
+-- ============================================================
+--
+-- Revenue = sum of payments linked to a train's bookings.
+-- We trace: trains → bookings → payments.
+-- Cancelled bookings have no payment row, so they naturally
+-- contribute 0 (LEFT JOIN returns NULL, SUM ignores NULL).
+-- ============================================================
+ 
+SELECT
+    t.train_id,
+    t.train_no,
+    t.name                              AS train_name,
+    COUNT(DISTINCT p.payment_id)        AS total_payments,
+    COALESCE(SUM(p.amount), 0.00)       AS total_revenue
+FROM
+    trains t
+    JOIN    bookings b  ON t.train_id   = b.train_id
+    LEFT JOIN payments p ON b.booking_id = p.booking_id
+GROUP BY
+    t.train_id,
+    t.train_no,
+    t.name
+ORDER BY
+    total_revenue DESC;
