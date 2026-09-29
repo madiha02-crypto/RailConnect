@@ -62,7 +62,7 @@ Storage engine	            InnoDB
 | `train_id` | INT | PK, AUTO_INCREMENT | Surrogate identifier |
 | `train_no` | VARCHAR(20) | UNIQUE (uq_trains_train_no) | Public-facing train number |
 | `name` | VARCHAR(100) | — | Train name (e.g. Karnataka Express) |
-| `train_type` | VARCHAR(30) | CHECK (chk_trains_train_type) | Category — allowed values in §4 |
+| `train_type` | VARCHAR(30) | CHECK (chk_trains_train_type) | Category — allowed values in Constraints Catalog|
 ## 3) train_station
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
@@ -77,21 +77,21 @@ Storage engine	            InnoDB
 | `coach_id` | INT | PK, AUTO_INCREMENT | Surrogate identifier |
 | `train_id` | INT | FK → trains (CASCADE), UNIQUE with coach_no (uq_coaches_train_coach) | Owning train |
 | `coach_no` | VARCHAR(20) | UNIQUE with train_id | Coach label (e.g. B1, S4) |
-| `class_type` | VARCHAR(10) | CHECK (chk_coaches_class_type) | Travel class — allowed values in §4 |
+| `class_type` | VARCHAR(10) | CHECK (chk_coaches_class_type) | Travel class — allowed values in Constraints Catalog |
 ## 5) seats
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `seat_id` | INT | PK, AUTO_INCREMENT | Surrogate identifier |
 | `coach_id` | INT | FK → coaches (CASCADE), UNIQUE with seat_no (uq_seats_coach_seat) | Owning coach |
 | `seat_no` | INT | CHECK (chk_seats_seat_no) | Seat number within the coach |
-| `berth_type` | VARCHAR(20) | CHECK (chk_seats_berth_type) | Berth position — allowed values in §4 |
+| `berth_type` | VARCHAR(20) | CHECK (chk_seats_berth_type) | Berth position — allowed values in Constraints Catalog |
 ## 6) passengers
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `passenger_id` | INT | PK, AUTO_INCREMENT | Surrogate identifier |
 | `name` | VARCHAR(100) | — | Passenger's full name |
 | `age` | INT | CHECK (chk_passengers_age) | Age in years (1–120) |
-| `gender` | VARCHAR(10) | CHECK (chk_passengers_gender) | Allowed values in §4 |
+| `gender` | VARCHAR(10) | CHECK (chk_passengers_gender) | Allowed values in Constraints Catalog |
 | `phone` | VARCHAR(15) | — | Contact number |
 ## 7) booking
 | Column | Type | Constraints | Description |
@@ -101,7 +101,7 @@ Storage engine	            InnoDB
 | `from_station_id` | INT | FK → stations | Boarding station |
 | `to_station_id` | INT | FK → stations | Destination station |
 | `journey_date` | DATE | — | Date of travel |
-| `status` | VARCHAR(30) | CHECK (chk_bookings_status) | Lifecycle — allowed values in §4 |
+| `status` | VARCHAR(30) | CHECK (chk_bookings_status) | Lifecycle — allowed values in Constraints Catalog|
 ## 8) tickets
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
@@ -117,7 +117,7 @@ Storage engine	            InnoDB
 | `payment_id` | INT | PK, AUTO_INCREMENT | Surrogate identifier |
 | `booking_id` | INT | FK → bookings (RESTRICT) | The booking being paid for |
 | `amount` | DECIMAL(10,2) | CHECK (chk_payments_amount) | Amount paid (strictly > 0) |
-| `method` | VARCHAR(20) | CHECK (chk_payments_method) | Payment channel — allowed values in §4 |
+| `method` | VARCHAR(20) | CHECK (chk_payments_method) | Payment channel — allowed values in Constraints Catalog |
 | `paid_on` | DATETIME | — | Payment timestamp |
 ## 10) cancellations
 | Column | Type | Constraints | Description |
