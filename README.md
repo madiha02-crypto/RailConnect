@@ -27,11 +27,11 @@ PAYMENT  ──→  (optionally)  CANCELLATION + refund
 ## Team
 | S.No | Name | USN | Role |
 | :--- | :--- | :--- | :--- |
-| 1 | Syed Kaifuddin | AU25UG-061 | GitHub & Integration Lead |
-| 2 | Yashwant Gowda | AU25UG-084 | Requirements & ER Diagram |
-| 3 | Lakshya R | AU25UG-029 | Relational Schema, Keys & Normalisation |
-| 4 | Madiha Shaik S | AU25UG-078 | SQL Implementation & Constraints |
-| 5 | Mohammed Shafi | AU25UG-036 | Sample Data & SQL Queries |
+| 1 | Syed Kaifuddin | AU25UG-061 | Sample Data & SQL Queries  |
+| 2 | Yashwant Gowda | AU25UG-084 | SQL Implementation & Constraints |
+| 3 | Lakshya R | AU25UG-029 | Requirements & ER Diagram  | 
+| 4 | Madiha Shaik S | AU25UG-078 | GitHub & Integration Lead | 
+| 5 | Mohammed Shafi | AU25UG-036 | Relational Schema, Keys & Normalisation |
 | 6 | Naman Choudhary | AU25UG-040 | Documentation & Validation |
 
 ✨ Key Features
