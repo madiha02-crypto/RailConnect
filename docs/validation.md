@@ -336,7 +336,33 @@ VALUES (1, 1, 2, '2001-01-01', 'Confirmed');
 ROLLBACK;
 
 ```
-
+| Test | FR | Expected | Actual | y/n |
+| :--- | :--- | :--- | :--- | :--- |
+| C01 | FR1 | 1062 |1062 | y |
+| C02 | FR2 | 1062 |1062 | y |
+| C03 | FR2 | 3819 |3819 | y |
+| C04 | FR3 | 1062 |1062 | y |
+| C05 | FR3 | 1062 |1062 | y |
+| C06 | FR3 | 3819 |3819 | y |
+| C07 | FR3 | 3819 |3819 | y |
+| C08 | FR13 | 1452 |1452 | y |
+| C09 | FR4 | 1062 |1062 | y |
+| C10 | FR4 | 3819 |3819 | y |
+| C11 | FR5 | 1062 |1062 | y |
+| C12 | FR5 | 3819 |3819 | y |
+| C13 | FR6 | 3819 |3819 | y |
+| C14 | FR6 | 3819 |3819 | y |
+| C15 | FR6 | 1048 |1048 | y |
+| C16 | FR7 | 3819 |3819 | y |
+| C17 | FR7 | 3819 |3819 | y |
+| C18 | FR13 | 1452 |1452 | y |
+| C19 ⭐ | FR9 | 1062 | - | n |
+| C20 | FR10 | 3819 |- | n |
+| C21 | FR13 | 1452 |- | n |
+| C22 | FR11 | 3819 |3819 | y |
+| C23 | FR11 | 3819 |3819 | y |
+| C24 | FR12 | 3819 |3819 | y |
+| C25 | FR12 | 1062 |1062 | y |
 
 ---
 
@@ -472,14 +498,14 @@ ROLLBACK;
 
 ```
 
-| Test | Expectation | Actual | ✔ |
+| Test | Expectation | Actual | y/n |
 | --- | --- | --- | --- |
-| D1 | 1451 |  | ☐ |
-| D2 | 1451 |  | ☐ |
-| D3 | cascade (tickets gone) |  | ☐ |
-| D4 | cascade (coaches + seats gone) |  | ☐ |
-| D5 | 1451 |  | ☐ |
-| D6 | 1451 |  | ☐ |
+| D1 | 1451 | 1451 | y |
+| D2 | 1451 | 1451 | y |
+| D3 | cascade (tickets gone) | - | n |
+| D4 | cascade (coaches + seats gone) |coaches + seats gone | y |
+| D5 | 1451 |  | n |
+| D6 | 1451 | 1451 | y |
 
 ---
 
@@ -586,16 +612,16 @@ HAVING paid <> fares;
 
 ```
 
-| Check | Expectation | Actual | ✔ |
+| Check | Expectation | Actual | y/n |
 | --- | --- | --- | --- |
-| DQ-1 | 0 rows |  | ☐ |
-| DQ-2 | 0 rows |  | ☐ |
-| DQ-3 | 0 rows |  | ☐ |
-| DQ-4 | 0 rows |  | ☐ |
-| DQ-5 | 0 rows |  | ☐ |
-| DQ-6 | 0 rows |  | ☐ |
-| DQ-7 | 0 rows |  | ☐ |
-| DQ-8 | informational |  | ☐ |
+| DQ-1 | 0 rows | 0 rows | y |
+| DQ-2 | 0 rows | 0 rows | y |
+| DQ-3 | 0 rows | 0 rows | y |
+| DQ-4 | 0 rows | 0 rows | y |
+| DQ-5 | 0 rows | - | n |
+| DQ-6 | 0 rows | 0 rows | y |
+| DQ-7 | 0 rows | 0 rows | y |
+| DQ-8 | informational | 0 rows | y |
 
 ---
 
