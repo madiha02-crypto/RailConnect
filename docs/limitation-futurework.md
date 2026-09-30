@@ -6,7 +6,6 @@ s## Limitations & Future Work — RailConnect
 
 | ID | Limitation | Why it exists, and what it costs |
 | :--- | :--- | :--- |
-| L1 | `journey_date` is stored twice | `tickets.journey_date` mirrors `bookings.journey_date`, and no constraint enforces their equality — the insert routine carries that responsibility. The redundancy is the price of expressing the no-double-booking rule as a single-table UNIQUE (`05-integrity-constraints.md`, Section 3). A buggy client can date a ticket differently from its booking. |
 | L2 | Booking creation is not atomic | A complete booking spans three tables (`bookings` → `tickets` → `payments`). The database enforces every table's rules but cannot force a client to finish the sequence — a crash after the first insert leaves a reservation with no tickets. |
 | L3 | Seat allocation is segment-blind | The star constraint means one seat serves exactly one passenger for an entire date. Real railways resell the same berth for a later segment of the route — passenger A rides stations 1–3, passenger B rides 3–5 on the same berth. RailConnect deliberately trades that capacity optimization for a rule that is trivially provable; segment reuse needs overlap logic a UNIQUE index cannot express. |
 | L4 | Payments are not reconciled to fares | Nothing enforces that a booking's payments sum to its tickets' fares. Partial payments and overpayments are representable — a CHECK cannot aggregate across rows. |
