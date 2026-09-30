@@ -78,21 +78,12 @@ FR12	The system shall process cancellations of tickets, recording the cancellati
 | A3 | Seats are allotted at booking time; there is no waitlist or RAC | the three-state status lifecycle; no queue tables |
 | A4 | A booking's lifecycle is exactly Confirmed, Partially Cancelled, or Cancelled | `chk_bookings_status` vocabulary |
 | A5 | Fare belongs to the ticket, not the booking — passengers in one booking may travel in different classes | fare lives on `tickets`, fixed at booking time |
-| A6 | A ticket's journey date mirrors its booking's journey date | deliberate redundancy that makes FR9 expressible as a single-table UNIQUE (documented deviation, `06`) |
-| A7 | A seat determines its train transitively (`seat` → `coach` → `train`) | the FR9 constraint needs only (`seat_id`, `journey_date`) — no `train` column in `tickets` |
-| A8 | A phone number is not a unique identifier — family members commonly share one | `phone` is NOT NULL but deliberately not UNIQUE |
+| A6 | A seat determines its train transitively (`seat` → `coach` → `train`) | the FR9 constraint needs only (`seat_id`, `journey_date`) — no `train` column in `tickets` |
+| A7 | A phone number is not a unique identifier — family members commonly share one | `phone` is NOT NULL but deliberately not UNIQUE |
 | A9 | Zero-fare tickets are legitimate (child or complimentary); payments always move real money | `chk_tickets_fare` allows 0, `chk_payments_amount` requires > 0 |
 | A10 | A refund may be zero (cancellation charges consume the fare) but never negative | `chk_cancellations_refund` |
 | A11 | Stop times are same-day clock times; multi-day chronology is not modelled | `TIME` columns; recorded as limitation L7 |
 | A12 | All monetary amounts are in INR | |
 
-## 4) Deviations from the PRD's Suggested Tables
-
-| Change | Reasoning |
-| :--- | :--- |
-| `tickets` gained a `journey_date` column | required to enforce FR9 — the no-double-booking rule cannot be expressed as a UNIQUE across tables. Full reasoning is recorded as a design decision in `07-design-rationale.md` |
-| `train_stations` renamed to `train_station` | naming consistency — every other table in the schema is singular |
-
-No tables were added, removed, or restructured beyond these.
 
 

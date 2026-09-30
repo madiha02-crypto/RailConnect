@@ -3,26 +3,17 @@
 Source of truth: schema/create_tables.sql. Every column, key and named constraint below is documented exactly as declared in the DDL
 
 ## Schema at a Glance
-
-Item	                    Value
-
-Tables	                    10
-
-Columns	                    47
-
-Primary keys	            10 (1 composite — train_station)
-
-Foreign keys	            12
-
-UNIQUE constraints	        7
-
-CHECK constraints	        14
-
-Named constraints (total)	43
-
-Nullable columns	        0 — every column is NOT NULL
-
-Storage engine	            InnoDB
+Item | Value
+---|---
+Tables | 10
+Columns | 46  *(Down from 47 since journey_date was removed from tickets)*
+Primary keys | 10 (1 composite — train_stations)
+Foreign keys | 12
+UNIQUE constraints | 6 *(Down from 7 since seat_id+journey_date unique constraint is removed)*
+CHECK constraints | 14
+Named constraints (total) | 42
+Nullable columns | 0 — every column is NOT NULL
+Storage engine | InnoDB
 
 
 #	Table , Columns	, Role
@@ -108,8 +99,7 @@ Storage engine	            InnoDB
 | `ticket_id` | INT | PK, AUTO_INCREMENT | Surrogate identifier |
 | `booking_id` | INT | FK → bookings (CASCADE) | The reservation this ticket belongs to |
 | `passenger_id` | INT | FK → passengers | Who travels |
-| `seat_id` | INT | FK → seats, UNIQUE with journey_date  | The allotted seat |
-| `journey_date` | DATE | UNIQUE with seat_id (uq_tickets_seat_journey) | Date of travel (mirrors bookings.journey_date) |
+| `seat_id` | INT | FK → seats | The allotted seat |
 | `fare` | DECIMAL(10,2) | CHECK (chk_tickets_fare) | Fare charged for this seat |
 ## 9) payments
 | Column | Type | Constraints | Description |

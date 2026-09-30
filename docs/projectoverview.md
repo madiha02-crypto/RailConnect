@@ -18,11 +18,7 @@ Money leaves a trail.Bookings are paid for; tickets are sometimes cancelled and 
 ## What RailConnect Is
 RailConnect is a relational database for railway reservation and scheduling — deliberately the database and nothing else. There is no application layer in this project; the schema itself is the deliverable, and every guarantee it makes is enforced by the engine rather than by calling code.
 
-It manages ten interlinked tables covering the complete reservation lifecycle:
-
-stations · trains · train_station · coaches · seats · passengers · bookings · tickets · payments · cancellations
-
-One rule governs the entire design: if MySQL can enforce it, it lives in the database. The result is 43 named constraints — and the problem's core rule, no seat sold twice for the same train and journey date, is enforced by a single unique index rather than any application logic 
+It manages ten interlinked tables covering the complete reservation lifecycle. While many rules are enforced at the database level using 42 named constraints, the core problem of preventing double-booking across different tables (tickets and bookings) relies on Application-level logic, ensuring the database remains perfectly normalized
 
 ## Out of Scope
 
