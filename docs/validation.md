@@ -56,8 +56,8 @@ SELECT 'cancellations', COUNT(*) FROM cancellations;
 | passengers | 100 | 100 |
 | bookings | 350 | 350 |
 | tickets | 350 | 350 |
-| payments | ___ | ___ |
-| cancellations | ___ | ___ |
+| payments | 299 | 299 |
+| cancellations | 80 | 80 |
 
 ---
 
