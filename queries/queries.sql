@@ -342,119 +342,67 @@ WHERE
 ORDER BY
     peak_revenue DESC;
  
-============================================================
--- Q10. What is the refund efficiency by train?
---      i.e., what percentage of collected revenue was
---      paid back as refunds due to cancellations?
---      Multi-table aggregation, COALESCE, derived tables
 -- ============================================================
---
--- No existing query connects payments and cancellations
--- together at the train level. This is operationally critical:
--- a train with high revenue but also high refund outflow is
--- a net risk.
---
--- collected_revenue : SUM of payments for that train's bookings
--- total_refunds     : SUM of refund_amount from cancellations
---                     linked back through tickets → bookings → train
--- refund_rate_pct   : total_refunds / collected_revenue × 100
---
--- We use two separate aggregation subqueries joined on train_id
--- so that the revenue and refund sums don't cross-multiply.
+-- Q10. Which train has the highest average ticket fare?
+--  
+-- We first calculate the average ticket fare for each train.
+-- A second CTE ranks the trains from highest average fare to
+-- lowest. We then select the train with rank 1.
 -- ============================================================
- 
+
+WITH train_fares AS (
+    SELECT
+        t.train_id,
+        t.train_no,
+        t.name AS train_name,
+        ROUND(AVG(tk.fare), 2) AS avg_fare
+    FROM
+        trains t
+        JOIN bookings b
+            ON t.train_id = b.train_id
+        JOIN tickets tk
+            ON b.booking_id = tk.booking_id
+    GROUP BY
+        t.train_id,
+        t.train_no,
+        t.name
+),
+ranked AS (
+    SELECT
+        *,
+        ROW_NUMBER() OVER (
+            ORDER BY avg_fare DESC
+        ) AS rnk
+    FROM train_fares
+)
 SELECT
-    t.train_id,
-    t.train_no,
-    t.name                                      AS train_name,
-    ROUND(COALESCE(rev.collected_revenue, 0), 2) AS collected_revenue,
-    ROUND(COALESCE(ref.total_refunds,     0), 2) AS total_refunds,
-    ROUND(
-        COALESCE(ref.total_refunds, 0)
-        / NULLIF(COALESCE(rev.collected_revenue, 0), 0) * 100,
-        2
-    )                                           AS refund_rate_pct
-FROM
-    trains t
-    -- Revenue side
-    LEFT JOIN (
-        SELECT
-            b.train_id,
-            SUM(p.amount)   AS collected_revenue
-        FROM
-            bookings b
-            JOIN payments p ON b.booking_id = p.booking_id
-        GROUP BY
-            b.train_id
-    ) rev ON t.train_id = rev.train_id
-    -- Refund side
-    LEFT JOIN (
-        SELECT
-            b.train_id,
-            SUM(cn.refund_amount)   AS total_refunds
-        FROM
-            cancellations cn
-            JOIN tickets  tk ON cn.ticket_id  = tk.ticket_id
-            JOIN bookings b  ON tk.booking_id = b.booking_id
-        GROUP BY
-            b.train_id
-    ) ref ON t.train_id = ref.train_id
-ORDER BY
-    refund_rate_pct DESC;
- 
- 
+    train_id,
+    train_no,
+    train_name,
+    avg_fare
+FROM ranked
+WHERE rnk = 1;
+
 -- ============================================================
--- Q11. Which stations are the busiest, measured by total
---      passenger footfall (departures + arrivals combined)?
---      UNION ALL, aggregation over combined sets
+-- Q11. How many tickets were sold for each coach class?
+--      JOIN, COUNT, GROUP BY
 -- ============================================================
 --
--- Q1 only counts bookings per route pair. This is different:
--- it measures how many passengers pass through each station
--- either as a departure point or an arrival point — total
--- footfall, the way a station manager would think about it.
---
--- We use UNION ALL to treat every booking's from_station
--- and to_station as separate footfall events, then count
--- them together per station. Each side also counts separately
--- so we can see the departure/arrival split.
+-- We connect tickets to seats and coaches to find the class
+-- of each ticket. We then count the tickets sold for each
+-- coach class and order the results from highest to lowest.
 -- ============================================================
- 
+
 SELECT
-    s.station_id,
-    s.name                                  AS station_name,
-    s.city,
-    SUM(CASE WHEN f.direction = 'departure' THEN f.cnt ELSE 0 END)
-                                            AS departures,
-    SUM(CASE WHEN f.direction = 'arrival'   THEN f.cnt ELSE 0 END)
-                                            AS arrivals,
-    SUM(f.cnt)                              AS total_footfall
+    c.class_type,
+    COUNT(tk.ticket_id) AS tickets_sold
 FROM
-    stations s
-    JOIN (
-        -- Departing passengers
-        SELECT
-            from_station_id     AS station_id,
-            'departure'         AS direction,
-            COUNT(*)            AS cnt
-        FROM   bookings
-        WHERE  status <> 'Cancelled'
-        GROUP BY from_station_id
- 
-        UNION ALL
- 
-        -- Arriving passengers
-        SELECT
-            to_station_id       AS station_id,
-            'arrival'           AS direction,
-            COUNT(*)            AS cnt
-        FROM   bookings
-        WHERE  status <> 'Cancelled'
-        GROUP BY to_station_id
-    ) f ON s.station_id = f.station_id
+    tickets tk
+    JOIN seats s
+        ON tk.seat_id = s.seat_id
+    JOIN coaches c
+        ON s.coach_id = c.coach_id
 GROUP BY
-    s.station_id,
-    s.name,
-    s.city
+    c.class_type
 ORDER BY
-    total_footfall DESC;
+    tickets_sold DESC;
