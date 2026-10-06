@@ -6,7 +6,6 @@
 | :--- | :--- | :--- |
 | D1 | Surrogate AUTO_INCREMENT PKs; business identifiers behind UNIQUE | Natural keys — unstable (trains get renumbered), wider joins, cascading rewrites |
 | D2 | `train_station` junction table carrying `stop_no` and `times` | Route stored as a station list on `trains` — violates 1NF, cannot hold per-stop times |
-| D3 | ⭐ `journey_date` copied onto `tickets`, enabling UNIQUE (`seat_id`, `journey_date`) | `train_id` on `tickets` with a 3-column UNIQUE — more redundancy for the same rule; CHECK — cannot see other rows; application-side check — race window |
 | D4 | Fare stored per ticket | Fare on the booking — passengers in one booking may differ in class and concessions |
 | D5 | Payments and cancellations as separate event tables | Money columns on `bookings`, a cancelled-flag on `tickets` — cannot represent unpaid, partial, at-most-once, or surviving history |
 | D6 | Stored three-state booking status | Status derived from `tickets` at query time — aggregation on every read; status is an operational fact, not a computation |
