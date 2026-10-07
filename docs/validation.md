@@ -88,15 +88,12 @@ SELECT DELETE_RULE, COUNT(*) FROM information_schema.REFERENTIAL_CONSTRAINTS
 WHERE CONSTRAINT_SCHEMA = 'RailConnect' GROUP BY DELETE_RULE;
 ```
 
-*(Expect: CASCADE 3 · RESTRICT 2 · NO ACTION 7 — NO ACTION ≡ RESTRICT in InnoDB)*
+*(Expect: CASCADE 3 · RESTRICT 2 · NO ACTION 7 )*
 
-Any disagreement between these numbers and the documentation is a defect against the docs — regenerate, don't patch.
 
----
 
 ## 4. Constraint Negative Tests
 
-> ⚠️ **C19 is a gap probe.** On the final schema it **succeeds** — that success is the recorded Finding F-1, not a test failure. Every other statement must **fail** with exactly the stated error.
 
 ### Stations
 
@@ -225,7 +222,7 @@ VALUES (999, 1, 2, '2026-03-01', 'Confirmed');
 
 ### Tickets
 
-**C19: Exact Duplicate Ticket (FR9)** — ⚠️ **GAP PROBE — succeeds** (no UNIQUE exists on `tickets` — Finding F-1)
+**C19: Exact Duplicate Ticket (FR9)** — ⚠️ succeeds** (no UNIQUE exists on `tickets`)
 
 ```sql
 START TRANSACTION;
