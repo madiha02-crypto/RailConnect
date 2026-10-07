@@ -7,7 +7,7 @@
 | ID | Limitation | Why it exists, and what it costs |
 | :--- | :--- | :--- |
 | L3 | Seat allocation is segment-blind |  one seat serves exactly one passenger for an entire date. Real railways resell the same berth for a later segment of the route — passenger A rides stations 1–3, passenger B rides 3–5 on the same berth. RailConnect deliberately trades that capacity optimization for a rule that is trivially provable; segment reuse needs overlap logic a UNIQUE index cannot express. |
-| L4 | Payments are not reconciled to fares | Nothing enforces that a booking's payments sum to its tickets' fares. Partial payments and overpayments are representable — a CHECK cannot aggregate across rows. |
+| L4 | Payments are not reconciled to fares | Nothing enforces that a booking's payments sum to its tickets' fares. Partial payments and overpayments are representable |
 | L5 | Refunds are not capped | `chk_cancellations_refund` only requires `refund_amount >= 0`. A refund exceeding the original fare is representable, because a CHECK cannot compare a column against a row in another table. |
 | L6 | Past journey dates are accepted | `journey_date >= today` cannot be expressed declaratively: MySQL forbids non-deterministic functions such as `CURDATE()` inside CHECK constraints. |
 | L7 | Route chronology is only partially validated | `chk_train_station_times` compares arrival against departure at the same stop, but nothing orders stops against each other — stop 4 arriving before stop 3 departs is representable. The TIME type also carries no day component, so on multi-day routes, 08:00 on day one is indistinguishable from 08:00 on day two. |
