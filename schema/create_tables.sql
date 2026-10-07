@@ -9,6 +9,7 @@
 
 DROP DATABASE IF EXISTS RailConnect;
 
+
 CREATE DATABASE RailConnect;
 
 USE RailConnect;
