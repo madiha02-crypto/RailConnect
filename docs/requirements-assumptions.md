@@ -50,26 +50,8 @@ FR12	The system shall process cancellations of tickets, recording the cancellati
 | FR13 | The system shall enforce referential integrity: no row may reference a parent row that does not exist, across all twelve foreign-key relationships. |
 | FR14 | The system shall protect financial history: a booking that has been paid, and a ticket that has been cancelled, can never be deleted. |
 
-## 2) Traceability — Requirement → Constraint
 
-| FR | Enforced by |
-| :--- | :--- |
-| FR1 | `uq_stations_code` |
-| FR2 | `uq_trains_train_no` · `chk_trains_train_type` |
-| FR3 | PK (`train_id`, `station_id`) · `uq_train_station_stop` · `chk_train_station_stop_no` · `chk_train_station_times` |
-| FR4 | `uq_coaches_train_coach` · `chk_coaches_class_type` |
-| FR5 | `uq_seats_coach_seat` · `chk_seats_seat_no` · `chk_seats_berth_type` |
-| FR6 | `chk_passengers_age` · `chk_passengers_gender` |
-| FR7 | `fk_bookings_train` · `fk_bookings_from_station` · `fk_bookings_to_station` · `chk_bookings_different_stations` · `chk_bookings_status` |
-| FR8 | `fk_tickets_booking` · `fk_tickets_passenger` · `fk_tickets_seat` |
-| FR9 | ⭐ `uq_tickets_seat_journey` |
-| FR10 | `chk_tickets_fare` |
-| FR11 | `chk_payments_amount` · `chk_payments_method` · `fk_payments_booking` |
-| FR12 | `uq_cancellations_ticket` · `chk_cancellations_refund` |
-| FR13 | all twelve `fk_*` constraints |
-| FR14 | `fk_payments_booking` (RESTRICT) · `fk_cancellations_ticket` (RESTRICT) |
-
-## 3) Assumptions
+## 2) Assumptions
 
 | ID | Assumption | Consequence in the design |
 | :--- | :--- | :--- |
@@ -77,13 +59,11 @@ FR12	The system shall process cancellations of tickets, recording the cancellati
 | A2 | A train's route and timings are the same every running day — timetables are date-independent | `train_station` carries no date dimension; day-of-week scheduling is not modelled |
 | A3 | Seats are allotted at booking time; there is no waitlist or RAC | the three-state status lifecycle; no queue tables |
 | A4 | A booking's lifecycle is exactly Confirmed, Partially Cancelled, or Cancelled | `chk_bookings_status` vocabulary |
-| A5 | Fare belongs to the ticket, not the booking — passengers in one booking may travel in different classes | fare lives on `tickets`, fixed at booking time |
-| A6 | A seat determines its train transitively (`seat` → `coach` → `train`) | the FR9 constraint needs only (`seat_id`, `journey_date`) — no `train` column in `tickets` |
-| A7 | A phone number is not a unique identifier — family members commonly share one | `phone` is NOT NULL but deliberately not UNIQUE |
-| A9 | Zero-fare tickets are legitimate (child or complimentary); payments always move real money | `chk_tickets_fare` allows 0, `chk_payments_amount` requires > 0 |
-| A10 | A refund may be zero (cancellation charges consume the fare) but never negative | `chk_cancellations_refund` |
-| A11 | Stop times are same-day clock times; multi-day chronology is not modelled | `TIME` columns; recorded as limitation L7 |
-| A12 | All monetary amounts are in INR | |
+| A5 | A seat determines its train transitively (`seat` → `coach` → `train`) | the FR9 constraint needs only (`seat_id`, `journey_date`) — no `train` column in `tickets` |
+| A6 | A phone number is not a unique identifier — family members commonly share one | `phone` is NOT NULL but deliberately not UNIQUE |
+| A7 | Zero-fare tickets are legitimate (child or complimentary); payments always move real money | `chk_tickets_fare` allows 0, `chk_payments_amount` requires > 0 |
+| A8 | A refund may be zero (cancellation charges consume the fare) but never negative | `chk_cancellations_refund` |
+| A9 | Stop times are same-day clock times; multi-day chronology is not modelled | `TIME` columns; recorded as limitation L7 |
 
 
 
