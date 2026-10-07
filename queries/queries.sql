@@ -36,6 +36,7 @@ GROUP BY
     s_from.city,
     s_to.name,
     s_to.city
+    
 ORDER BY
     total_bookings DESC;
 
