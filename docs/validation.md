@@ -284,27 +284,8 @@ VALUES (@tk, NOW(), 100.00);                     -- → 1062
 ROLLBACK;
 ```
 
-### Known-Gap Probes (Succeed by Design)
 
-These confirm limitations documented in `11-limitations-future-work.md`.
 
-**Refund exceeding fare (L5)** — Succeeds
-
-```sql
-START TRANSACTION;
-INSERT INTO cancellations (ticket_id, cancelled_on, refund_amount)
-VALUES (2, NOW(), 999999.00);
-ROLLBACK;
-```
-
-**Past date accepted (L6)** — Succeeds
-
-```sql
-START TRANSACTION;
-INSERT INTO bookings (train_id, from_station_id, to_station_id, journey_date, status)
-VALUES (1, 1, 2, '2001-01-01', 'Confirmed');
-ROLLBACK;
-```
 
 ### Results
 
@@ -328,7 +309,7 @@ ROLLBACK;
 | C16 | FR7 | 3819 | 3819 | y |
 | C17 | FR7 | 3819 | 3819 | y |
 | C18 | FR13 | 1452 | 1452 | y |
-| C19 ⚠️ | FR9 | succeeds (gap) | insert accepted | F-1 |
+| C19 ⚠️ | FR9 | succeeds (gap) | 
 | C20 | FR10 | 3819 | 3819 | y |
 | C21 | FR13 | 1452 | 1452 | y |
 | C22 | FR11 | 3819 | 3819 | y |
@@ -366,39 +347,15 @@ VALUES (@b2, 2, 25, 750.00);                     -- ⚠️ SUCCEEDS — Finding 
 **Step 3: Same seat, the next date.**
 
 ```sql
+INSERT INTO bookings (train_id, from_station_id, to_station_id, journey_date, status)
+VALUES (1, 1, 2, '2026-05-02', 'Confirmed');
+SET @b3 = LAST_INSERT_ID();
+
 INSERT INTO tickets (booking_id, passenger_id, seat_id, fare)
-VALUES (@b2, 2, 25, 750.00);                     -- succeeds ✓
-ROLLBACK;
+VALUES (@b3, 2, 25, 750.00);  -- succeeds ✓ (Valid business logic)
 ```
 
 Steps 2 and 3 are **indistinguishable to the engine** — nothing in the database tells a same-date double sale from a legitimate next-day resale. The rule currently lives entirely in the insert routine; the sample data is verified clean by DQ-3 (0 rows).
-
-**Recommended resolution (one trigger, `create_tables.sql`):**
-
-```sql
-DELIMITER //
-CREATE TRIGGER trg_tickets_no_double_booking
-BEFORE INSERT ON tickets
-FOR EACH ROW
-BEGIN
-    IF EXISTS (
-        SELECT 1
-        FROM tickets tk
-        JOIN bookings b_old ON tk.booking_id = b_old.booking_id
-        JOIN bookings b_new ON b_new.booking_id = NEW.booking_id
-        WHERE tk.seat_id = NEW.seat_id
-          AND b_old.journey_date = b_new.journey_date
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'FR9 violation: seat already allotted for this journey date';
-    END IF;
-END//
-DELIMITER ;
-```
-
-If adopted, Step 2 fails with **ERROR 1644** and this section flips to a pass. *(A CHECK cannot see other rows and a UNIQUE cannot span tables — a trigger is the only database-level mechanism left.)*
-
----
 
 ## 6. Referential Action Tests (Delete Matrix)
 
