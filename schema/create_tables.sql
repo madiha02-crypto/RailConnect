@@ -331,14 +331,57 @@ CREATE TABLE cancellations (
 
 
 -- ============================================================
--- 12. CHECK ALL TABLES
+-- 12. USING Delimeter to reinforce double booking
+-- ============================================================
+
+
+DELIMITER $$
+
+CREATE TRIGGER trg_prevent_seat_double_booking
+BEFORE INSERT ON tickets
+FOR EACH ROW
+BEGIN
+    DECLARE v_journey_date DATE;
+    DECLARE v_train_id INT;
+    DECLARE v_already_booked INT DEFAULT 0;
+
+    -- 1. Retrieve journey date and train_id for the incoming booking
+    SELECT journey_date, train_id 
+    INTO v_journey_date, v_train_id
+    FROM bookings
+    WHERE booking_id = NEW.booking_id;
+
+    -- 2. Check if this seat is already held by an active (non-cancelled) ticket
+    SELECT COUNT(*)
+    INTO v_already_booked
+    FROM tickets t
+    JOIN bookings b ON t.booking_id = b.booking_id
+    LEFT JOIN cancellations c ON t.ticket_id = c.ticket_id
+    WHERE t.seat_id = NEW.seat_id
+      AND b.train_id = v_train_id
+      AND b.journey_date = v_journey_date
+      AND b.status <> 'Cancelled'
+      AND c.cancellation_id IS NULL; -- Seat is free if ticket was cancelled
+
+    -- 3. If seat is occupied, abort the transaction immediately
+    IF v_already_booked > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Integrity Violation: Seat is already booked for this train and journey date.';
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+-- ============================================================
+-- 13. CHECK ALL TABLES
 -- ============================================================
 
 SHOW TABLES;
 
 
 -- ============================================================
--- 13. CHECK TABLE STRUCTURES
+-- 14. CHECK TABLE STRUCTURES
 -- ============================================================
 
 DESCRIBE stations;
