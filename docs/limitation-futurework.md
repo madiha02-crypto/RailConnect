@@ -32,7 +32,6 @@
 | :--- | :--- | :--- | :--- | :--- |
 | P1 | FW3 | `trg_future_journey` BEFORE INSERT trigger | Rejects journey dates in the past — the trigger can call `CURDATE()`, which a CHECK cannot | L6 |
 | P1 | FW4 | `trg_refund_cap` BEFORE INSERT trigger | Rejects a refund larger than the referenced ticket's fare | L5 |
-| P2 | FW5 | `v_available_seats` view | Free seats per train per date — turns the star rule inside-out into the query a booking screen actually needs | — |
 | P2 | FW6 | Payment reconciliation check | Flags bookings where `SUM(payments)` ≠ `SUM(ticket fares)` | L4 |
 | P2 | FW7 | Waitlist modelling | The E2 design, implemented | E2 |
 | P3 | FW8 | Segment-aware allocation | Same berth sold for non-overlapping route segments — requires overlap logic (PostgreSQL's EXCLUDE constraint, or generated-column workarounds on MySQL) | L3 |
