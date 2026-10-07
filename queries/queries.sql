@@ -82,7 +82,8 @@ ORDER BY
 -- then divide by total seats (coaches JOIN seats) to get
 -- the occupancy ratio.
 -- ============================================================
- 
+
+
 SELECT
     t.train_id,
     t.train_no,
