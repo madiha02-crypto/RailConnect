@@ -594,31 +594,6 @@ HAVING paid <> fares;
 
 ---
 
-## 8. ER ⇄ Schema ⇄ SQL Cross-Check
-
-The four relationships the PRD (§5) mandates, traced from diagram to DDL — spot-check each against [`diagrams/`](../diagrams):
-
-| PRD requirement | Schema | Enforced by | ✔ |
-| :--- | :--- | :--- | :--- |
-| Train M:N Station, via route table | `train_stations` junction | `pk_train_stations` composite + 2 FKs | ☐ |
-| Train 1:N Coach | `coaches.train_id` | `fk_coaches_train` | ☐ |
-| Coach 1:N Seat | `seats.coach_id` | `fk_seats_coach` | ☐ |
-| Booking 1:N Ticket | `tickets.booking_id` | `fk_tickets_booking` | ☐ |
-| ⭐ Seat never allotted twice (train + date) | cross-table rule | **not enforced** — F-1; trigger recommended (§5) | ✗ |
-
----
-
-## 9. README Setup Verification
-
-On a clean server, the three steps from the repository README, in order:
-
-| Step | Command | Expected |
-| :--- | :--- | :--- |
-| 1 | `source schema/create_tables.sql` | 10 tables, no errors |
-| 2 | `source data/insert_data.sql` | full load, no errors |
-| 3 | `source queries/queries.sql` | all 11 queries return results |
-
-Result: ☐ — *if any step fails, the README is wrong and this is a finding.*
 
 
 
