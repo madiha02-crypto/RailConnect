@@ -135,15 +135,14 @@ Which stations are the busiest, measured by total passenger footfall (departures
 
 06-normalisation.md	- Functional dependencies and the full 1NF → 2NF → 3NF working
 
-07-design-rationale.md - The key design decisions, each with the alternative we considered and rejected
 
 ## Reference
-08-data-dictionary.md - All 10 tables, column by column: data type, constraint, meaning
+07-data-dictionary.md - All 10 tables, column by column: data type, constraint, meaning
 
 ## Validation & Analysis
-09-queries-and-results.md	- All 10 business queries with the SQL, results and business interpretation
+08-queries-and-results.md	- All 10 business queries with the SQL, results and business interpretation
 
-10-validation-report.md	- ER ⇄ schema ⇄ SQL cross-check matrix, plus negative constraint tests with expected errors
+09-validation-report.md	- ER ⇄ schema ⇄ SQL cross-check matrix, plus negative constraint tests with expected errors
 
-11-limitations-future-work.md
+10-limitations-future-work.md
 
