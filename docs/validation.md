@@ -539,20 +539,10 @@ FROM cancellations cn JOIN tickets tk ON cn.ticket_id = tk.ticket_id
 WHERE cn.refund_amount > tk.fare;
 ```
 
-**DQ-5: 'Partially Cancelled' bookings have both an active and a cancelled ticket**
 
-```sql
-SELECT b.booking_id, COUNT(tk.ticket_id) AS tickets,
-       SUM(CASE WHEN cn.cancellation_id IS NULL THEN 1 ELSE 0 END) AS active_tickets
-FROM bookings b
-LEFT JOIN tickets tk ON tk.booking_id = b.booking_id
-LEFT JOIN cancellations cn ON cn.ticket_id = tk.ticket_id
-WHERE b.status = 'Partially Cancelled'
-GROUP BY b.booking_id
-HAVING active_tickets = 0 OR active_tickets = COUNT(tk.ticket_id);
-```
 
-**DQ-6: Cancelled bookings carry no payments** *(the assumption `queries.sql` Q4 depends on)*
+
+**DQ-5: Cancelled bookings carry no payments** *(the assumption `queries.sql` Q4 depends on)*
 
 ```sql
 SELECT b.booking_id FROM bookings b
@@ -560,7 +550,7 @@ JOIN payments p ON p.booking_id = b.booking_id
 WHERE b.status = 'Cancelled';
 ```
 
-**DQ-7: Every ticket of a 'Cancelled' booking has a cancellation row**
+**DQ-6: Every ticket of a 'Cancelled' booking has a cancellation row**
 
 ```sql
 SELECT tk.ticket_id FROM tickets tk
@@ -569,7 +559,7 @@ LEFT JOIN cancellations cn ON cn.ticket_id = tk.ticket_id
 WHERE b.status = 'Cancelled' AND cn.cancellation_id IS NULL;
 ```
 
-**DQ-8: Payments vs Fares** *(informational — not enforced by design, L4)*
+**DQ-7: Payments vs Fares** *(informational — not enforced by design, L4)*
 
 ```sql
 SELECT b.booking_id,
@@ -588,7 +578,7 @@ HAVING paid <> fares;
 | DQ-5 | 0 rows | 0 rows | y |
 | DQ-6 | 0 rows | 0 rows | y |
 | DQ-7 | 0 rows | 0 rows | y |
-| DQ-8 | informational | 0 rows | y |
+
 
 > **DQ-5 note:** the sample data has exactly one ticket per booking (350 / 350), so the 'Partially Cancelled' status cannot legitimately occur — a booking is either fully active or fully cancelled. Every 'Partially Cancelled' booking is therefore flagged. Recorded as Finding F-2.
 
