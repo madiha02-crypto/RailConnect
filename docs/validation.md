@@ -444,9 +444,7 @@ ROLLBACK;
 
 ## 7. Data Quality Audit
 
-The constraints prove the *structure*; these queries audit the *sample data* ([`data/insert_data.sql`](../data/insert_data.sql)) — the "data quality" half of the implementation marks.
-
-**DQ-1: Every ticket's seat belongs to the booking's train (seat → coach → train)**
+The constraints prove the *structure*; these queries audit the *sample data* ([`data/insert_data.sql`](../data/insert_data.sql)) 
 
 ```sql
 SELECT tk.ticket_id, tk.seat_id, c.train_id AS seat_train, b.train_id AS booking_train
