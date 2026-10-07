@@ -106,6 +106,7 @@ FROM
             FROM   bookings
             WHERE  status <> 'Cancelled'
         )
+    
 GROUP BY
     t.train_id,
     t.train_no,
