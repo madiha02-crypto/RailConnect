@@ -53,17 +53,14 @@ FR12	The system shall process cancellations of tickets, recording the cancellati
 
 ## 2) Assumptions
 
-| ID | Assumption | Consequence in the design |
-| :--- | :--- | :--- |
-| A1 | A booking covers exactly one train, one journey date, and one origin–destination pair | `bookings` shape; multi-leg journeys excluded (see 11, E5) |
-| A2 | A train's route and timings are the same every running day — timetables are date-independent | `train_station` carries no date dimension; day-of-week scheduling is not modelled |
-| A3 | Seats are allotted at booking time; there is no waitlist or RAC | the three-state status lifecycle; no queue tables |
-| A4 | A booking's lifecycle is exactly Confirmed, Partially Cancelled, or Cancelled | `chk_bookings_status` vocabulary |
-| A5 | A seat determines its train transitively (`seat` → `coach` → `train`) | the FR9 constraint needs only (`seat_id`, `journey_date`) — no `train` column in `tickets` |
-| A6 | A phone number is not a unique identifier — family members commonly share one | `phone` is NOT NULL but deliberately not UNIQUE |
-| A7 | Zero-fare tickets are legitimate (child or complimentary); payments always move real money | `chk_tickets_fare` allows 0, `chk_payments_amount` requires > 0 |
-| A8 | A refund may be zero (cancellation charges consume the fare) but never negative | `chk_cancellations_refund` |
-| A9 | Stop times are same-day clock times; multi-day chronology is not modelled | `TIME` columns; recorded as limitation L7 |
-
-
+| ID | Assumption |
+| :--- | :--- |
+| A1 | A booking covers exactly one train, one journey date, and one origin–destination pair 
+| A2 | A train's route and timings are the same every running day — timetables are date-independent | 
+| A3 | Seats are allotted at booking time; there is no waitlist or RAC | 
+| A4 | A booking's lifecycle is exactly Confirmed, Partially Cancelled, or Cancelled | 
+| A5 | A phone number is not a unique identifier — family members commonly share one | 
+| A6 | Zero-fare tickets are legitimate (child or complimentary); payments always move real money | 
+| A7 | A refund may be zero (cancellation charges consume the fare) but never negative |
+| A8 | Stop times are same-day clock times; multi-day chronology is not modelled |
 
