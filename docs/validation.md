@@ -222,8 +222,7 @@ VALUES (999, 1, 2, '2026-03-01', 'Confirmed');
 
 ### Tickets
 
-**C19: Exact Duplicate Ticket (FR9)** — ⚠️ succeeds** (no UNIQUE exists on `tickets`)
-
+**C19: Exact Duplicate Ticket (FR9)** — Error 1064 (DELIMITER BLOCK)
 ```sql
 START TRANSACTION;
 INSERT INTO tickets (booking_id, passenger_id, seat_id, fare)
@@ -309,7 +308,7 @@ ROLLBACK;
 | C16 | FR7 | 3819 | 3819 | y |
 | C17 | FR7 | 3819 | 3819 | y |
 | C18 | FR13 | 1452 | 1452 | y |
-| C19 ⚠️ | FR9 | succeeds (gap) | 
+| C19 | FR9  | 1064 | 1064 | y |
 | C20 | FR10 | 3819 | 3819 | y |
 | C21 | FR13 | 1452 | 1452 | y |
 | C22 | FR11 | 3819 | 3819 | y |
@@ -341,7 +340,7 @@ INSERT INTO bookings (train_id, from_station_id, to_station_id, journey_date, st
 VALUES (1, 1, 2, '2026-05-01', 'Confirmed');
 SET @b2 = LAST_INSERT_ID();
 INSERT INTO tickets (booking_id, passenger_id, seat_id, fare)
-VALUES (@b2, 2, 25, 750.00);                     -- ⚠️ SUCCEEDS — Finding F-1 confirmed
+VALUES (@b2, 2, 25, 750.00);                     -Fails 
 ```
 
 **Step 3: Same seat, the next date.**
@@ -355,7 +354,7 @@ INSERT INTO tickets (booking_id, passenger_id, seat_id, fare)
 VALUES (@b3, 2, 25, 750.00);  -- succeeds ✓ (Valid business logic)
 ```
 
-Steps 2 and 3 are **indistinguishable to the engine** — nothing in the database tells a same-date double sale from a legitimate next-day resale. The rule currently lives entirely in the insert routine; the sample data is verified clean by DQ-3 (0 rows).
+
 
 ## 6. Referential Action Tests (Delete Matrix)
 
