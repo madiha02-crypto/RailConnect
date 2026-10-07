@@ -121,7 +121,6 @@ What is the refund efficiency by train?
 Which stations are the busiest, measured by total passenger footfall (departures + arrivals combined)?
 
 
-## Document	and What's inside
 ## Design & Requirements
 01-problem-statement.md - The problem, its scope, and what RailConnect does and deliberately doesn't do
 
