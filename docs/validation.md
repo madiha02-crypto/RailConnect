@@ -585,7 +585,7 @@ HAVING paid <> fares;
 | DQ-2 | 0 rows | 0 rows | y |
 | DQ-3 | 0 rows | 0 rows | y |
 | DQ-4 | 0 rows | 0 rows | y |
-| DQ-5 | 0 rows | rows returned | ⚠️ F-2 |
+| DQ-5 | 0 rows | 0 rows | y |
 | DQ-6 | 0 rows | 0 rows | y |
 | DQ-7 | 0 rows | 0 rows | y |
 | DQ-8 | informational | 0 rows | y |
