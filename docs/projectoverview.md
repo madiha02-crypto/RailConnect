@@ -2,7 +2,7 @@
 
 ## The Problem
 
-Railway reservation is one of the most constraint-heavy data problems in everyday life. Indian Railways alone runs thousands of trains across more than 7,000 stations, carrying millions of passengers a day — and behind every ticket lies a data problem where a single mistake is immediately visible to a real passenger.
+Railway reservation is one of the most constraint-heavy systems . Indian Railways alone runs thousands of trains across more than 7,000 stations, carrying millions of passengers a day —  where a single mistake is immediately visible to a real passenger.
 
 ## What RailConnect Is
 RailConnect is a relational database for railway reservation and scheduling . Insted of having an application layer , we used built in Mysql constraints to manage the system.
