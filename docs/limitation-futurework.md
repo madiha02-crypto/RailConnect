@@ -6,7 +6,7 @@
 
 | ID | Limitation | Why it exists, and what it costs |
 | :--- | :--- | :--- |
-| L3 | Seat allocation is segment-blind | The star constraint means one seat serves exactly one passenger for an entire date. Real railways resell the same berth for a later segment of the route — passenger A rides stations 1–3, passenger B rides 3–5 on the same berth. RailConnect deliberately trades that capacity optimization for a rule that is trivially provable; segment reuse needs overlap logic a UNIQUE index cannot express. |
+| L3 | Seat allocation is segment-blind |  one seat serves exactly one passenger for an entire date. Real railways resell the same berth for a later segment of the route — passenger A rides stations 1–3, passenger B rides 3–5 on the same berth. RailConnect deliberately trades that capacity optimization for a rule that is trivially provable; segment reuse needs overlap logic a UNIQUE index cannot express. |
 | L4 | Payments are not reconciled to fares | Nothing enforces that a booking's payments sum to its tickets' fares. Partial payments and overpayments are representable — a CHECK cannot aggregate across rows. |
 | L5 | Refunds are not capped | `chk_cancellations_refund` only requires `refund_amount >= 0`. A refund exceeding the original fare is representable, because a CHECK cannot compare a column against a row in another table. |
 | L6 | Past journey dates are accepted | `journey_date >= today` cannot be expressed declaratively: MySQL forbids non-deterministic functions such as `CURDATE()` inside CHECK constraints. |
@@ -30,12 +30,10 @@
 
 | Priority | ID | Enhancement | What it delivers | Closes |
 | :--- | :--- | :--- | :--- | :--- |
-| P1 | FW2 | `trg_ticket_date_match` BEFORE INSERT trigger | Rejects a ticket whose `journey_date` differs from its booking's | L1 |
 | P1 | FW3 | `trg_future_journey` BEFORE INSERT trigger | Rejects journey dates in the past — the trigger can call `CURDATE()`, which a CHECK cannot | L6 |
 | P1 | FW4 | `trg_refund_cap` BEFORE INSERT trigger | Rejects a refund larger than the referenced ticket's fare | L5 |
 | P2 | FW5 | `v_available_seats` view | Free seats per train per date — turns the star rule inside-out into the query a booking screen actually needs | — |
 | P2 | FW6 | Payment reconciliation check | Flags bookings where `SUM(payments)` ≠ `SUM(ticket fares)` | L4 |
 | P2 | FW7 | Waitlist modelling | The E2 design, implemented | E2 |
 | P3 | FW8 | Segment-aware allocation | Same berth sold for non-overlapping route segments — requires overlap logic (PostgreSQL's EXCLUDE constraint, or generated-column workarounds on MySQL) | L3 |
-| P3 | FW9 | Targeted indexes | Composite index on `bookings` (`train_id`, `journey_date`) for the hot availability lookup; index on `payments.paid_on` for the revenue analytics in `09-queries-and-results.md` | — |
 | P3 | FW12 | Multi-leg journeys | The E5 design, implemented | E5 |
