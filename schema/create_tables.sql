@@ -7,6 +7,7 @@
 -- 1. CREATE DATABASE
 -- ============================================================
 
+
 DROP DATABASE IF EXISTS RailConnect;
 
 CREATE DATABASE RailConnect;
@@ -17,6 +18,7 @@ USE RailConnect;
 -- ============================================================
 -- 2. STATIONS
 -- ============================================================
+
 
 CREATE TABLE stations (
     station_id INT NOT NULL AUTO_INCREMENT,
