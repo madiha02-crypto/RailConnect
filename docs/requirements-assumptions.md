@@ -40,8 +40,9 @@
 
 ## F6 — Cancellations & refunds
 
-ID	Requirement
-FR12	The system shall process cancellations of tickets, recording the cancellation timestamp and a refund amount — a ticket can be cancelled at most once, and refunds can never be negative.
+| ID	 | Requirement |
+| :--- | :--- |
+| FR12 |	The system shall process cancellations of tickets, recording the cancellation timestamp and a refund amount — a ticket can be cancelled at most once, and refunds can never be negative. |
 
 ## Cross-cutting
 
