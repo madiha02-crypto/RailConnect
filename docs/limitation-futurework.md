@@ -1,4 +1,4 @@
-s## Limitations & Future Work — RailConnect
+## Limitations & Future Work — RailConnect
 
 01-problem-statement.md draws the project's boundary in one line per exclusion. This file owns the full ledger, in three parts: limitations — weaknesses of the system we did build; exclusions — the boundaries we deliberately chose, expanded with reasoning and upgrade paths; and future work — those upgrade paths, prioritized.
 
