@@ -286,67 +286,9 @@ ORDER BY
     class_revenue DESC;
  
  
--- ============================================================
--- Q9. For each train, on which journey date was revenue
---     the highest? (Peak revenue date per train)
---     CTE + ROW_NUMBER() window function
--- ============================================================
---
--- None of Q1–Q7 look at the time dimension of revenue.
--- This identifies each train's single best-performing date —
--- useful for understanding demand peaks and scheduling.
---
--- Approach:
---   Step 1 (CTE daily_revenue): sum payments per train per date.
---   Step 2 (CTE ranked): assign ROW_NUMBER() within each train,
---           ordered by revenue descending.
---   Step 3: filter to rank = 1 to get only the peak date.
--- ============================================================
- 
-WITH daily_revenue AS (
-    SELECT
-        t.train_id,
-        t.train_no,
-        t.name                          AS train_name,
-        b.journey_date,
-        SUM(p.amount)                   AS day_revenue,
-        COUNT(DISTINCT b.booking_id)    AS bookings_on_day
-    FROM
-        trains   t
-        JOIN bookings  b ON t.train_id   = b.train_id
-        JOIN payments  p ON b.booking_id = p.booking_id
-    GROUP BY
-        t.train_id,
-        t.train_no,
-        t.name,
-        b.journey_date
-),
-ranked AS (
-    SELECT
-        *,
-        ROW_NUMBER() OVER (
-            PARTITION BY train_id
-            ORDER BY day_revenue DESC
-        )                               AS rnk
-    FROM
-        daily_revenue
-)
-SELECT
-    train_id,
-    train_no,
-    train_name,
-    journey_date                        AS peak_date,
-    ROUND(day_revenue, 2)               AS peak_revenue,
-    bookings_on_day
-FROM
-    ranked
-WHERE
-    rnk = 1
-ORDER BY
-    peak_revenue DESC;
  
 -- ============================================================
--- Q10. Which train has the highest average ticket fare?
+-- Q9. Which train has the highest average ticket fare?
 --  
 -- We first calculate the average ticket fare for each train.
 -- A second CTE ranks the trains from highest average fare to
@@ -387,7 +329,7 @@ FROM ranked
 WHERE rnk = 1;
 
 -- ============================================================
--- Q11. How many tickets were sold for each coach class?
+-- Q10. How many tickets were sold for each coach class?
 --      JOIN, COUNT, GROUP BY
 -- ============================================================
 --
