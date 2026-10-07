@@ -12,9 +12,7 @@ This report proves the structure holds — by trying to break it.
 | Item | Value |
 | :--- | :--- |
 | Server | MySQL `8.0.xx` (replace `xx` with your exact version from `SELECT VERSION();`) |
-| sql_mode | `STRICT_TRANS_TABLES` |
 | Database | `RailConnect`, loaded fresh from DDL + sample data |
-| Run date | `2026-09-30` |
 
 ---
 
