@@ -320,7 +320,6 @@ ROLLBACK;
 
 ## 5. ⭐ The No-Double-Booking Rule (FR9) — Live Status
 
-The rule is **cross-table**: the seat's train lives two hops away (`seats → coaches → trains`), while the journey date lives on `bookings`. MySQL can express it neither as a CHECK (single-row visibility) nor as a UNIQUE (single-table scope). The team kept `tickets` strictly normalised — no `journey_date` copy (see `07-design-rationale.md`, D3) — so the rule is **not enforced by the engine**. Demonstrated live:
 
 **Step 1: Passenger 1 books seat 25 (coach 4 → train 1) for 2026-05-01.**
 
