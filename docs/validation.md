@@ -357,7 +357,7 @@ VALUES (@b3, 2, 25, 750.00);  -- succeeds ✓ (Valid business logic)
 
 ## 6. Referential Action Tests (Delete Matrix)
 
-The policy from [`05-integrity-constraints.md`](05-integrity-constraints.md) §2, executed live. All wrapped in transactions.
+The policy from [`05-integrity-constraints.md`](05-integrity-constraints.md) , executed live. All wrapped in transactions.
 
 **D1: A train that has bookings cannot be deleted** — Fails with 1451
 
